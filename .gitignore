@@ -1,0 +1,44 @@
+# Node modules
+node_modules/
+
+# Build output
+build/
+dist/
+.tmp/
+
+# Environment files
+.env
+.env.*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+
+# AdonisJS specific
+tmp/
+ace-manifest.json
+
+# Coverage (for tests)
+coverage/
+
+# Cache
+.cache/
+.nyc_output/
+
+# Lock files (optional, depending on team workflow)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml

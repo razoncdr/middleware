@@ -1,0 +1,760 @@
+{
+  "info": {
+    "name": "AdonisJS Middleware Learning Lab",
+    "description": "Comprehensive collection to test and learn all types of middleware patterns in AdonisJS.\n\n🎯 **What You'll Learn:**\n- Global vs Named middleware\n- Before vs After request processing\n- Authentication & Authorization\n- Rate limiting & throttling\n- Device detection\n- Feature flags & A/B testing\n- Response transformation\n- Error handling\n\n🔑 **Available Tokens:**\n- user-token-123 (regular user)\n- admin-token-456 (admin user)\n- demo-token-789 (demo user)\n\n💡 **Tips:**\n1. Check response headers to see middleware effects\n2. Watch the server console for detailed logs\n3. Try requests without tokens to see auth failures\n4. Make multiple rapid requests to test rate limiting\n5. Change User-Agent to test device detection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "12345678-1234-1234-1234-123456789012",
+    "updatedAt": "2025-09-03T07:02:05.000Z"
+  },
+  "item": [
+    {
+      "name": "📋 Overview & Documentation",
+      "item": [
+        {
+          "name": "🏠 Welcome - Get Overview",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"]
+            },
+            "description": "Get an overview of all available endpoints and middleware patterns.\n\n**What to expect:**\n- Complete list of endpoints\n- Available authentication tokens\n- Usage examples\n- Only global middleware runs here"
+          },
+          "response": []
+        }
+      ],
+      "description": "Start here to understand the available endpoints and middleware patterns."
+    },
+    {
+      "name": "🌍 Global Middleware Examples",
+      "item": [
+        {
+          "name": "🌐 Public Endpoint - Global Middleware Only",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "User-Agent",
+                "value": "Postman-Learning-Lab/1.0",
+                "description": "Custom user agent for testing"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/demo/public",
+              "host": ["{{baseUrl}}"],
+              "path": ["demo", "public"]
+            },
+            "description": "**Global Middleware Demo**\n\nThis endpoint only uses global middleware:\n- 📝 RequestLogger (before/after)\n- 🌍 CORS headers\n- 🛡️ Security headers\n- 📦 Body parser\n\n**Check Response Headers:**\n- X-Frame-Options\n- X-Content-Type-Options\n- Access-Control-Allow-Origin\n- X-Powered-By\n\n**Check Server Console:**\n- Request logging with timing\n- Security headers addition\n- CORS processing"
+          },
+          "response": []
+        },
+        {
+          "name": "🔄 Response Transformation Demo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/demo/transform",
+              "host": ["{{baseUrl}}"],
+              "path": ["demo", "transform"]
+            },
+            "description": "**Response Transformation Middleware**\n\nDemonstrates advanced response processing:\n- ⚡ Performance timing\n- 🆔 Request ID generation\n- 📊 Response enrichment with metadata\n- 🔄 Response transformation\n\n**Check Response Headers:**\n- X-Request-ID\n- X-Processing-Time\n- X-Server\n\n**Check Response Body:**\n- Meta object with timing and request ID\n- Server version information\n- Timestamp data"
+          },
+          "response": []
+        }
+      ],
+      "description": "Test global middleware that runs on every single request, regardless of the route."
+    },
+    {
+      "name": "🔐 Authentication & Authorization",
+      "item": [
+        {
+          "name": "❌ Protected Route - No Token (Should Fail)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/demo/protected",
+              "host": ["{{baseUrl}}"],
+              "path": ["demo", "protected"]
+            },
+            "description": "**Authentication Failure Test**\n\nThis request should fail with 401 status because:\n- No Authorization header provided\n- Auth middleware blocks the request\n- Route handler never executes\n\n**Expected Response:**\n- Status: 401 Unauthorized\n- Error message about missing token\n- Helpful hint about adding Authorization header\n\n**Learning:**\n- Middleware can terminate requests early\n- No further middleware or route handlers run after failure"
+          },
+          "response": []
+        },
+        {
+          "name": "✅ Protected Route - Valid User Token",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer user-token-123",
+                "description": "Valid user token"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/demo/protected",
+              "host": ["{{baseUrl}}"],
+              "path": ["demo", "protected"]
+            },
+            "description": "**Authentication Success Test**\n\nThis request should succeed because:\n- Valid Authorization header provided\n- Auth middleware validates token\n- User context injected into request\n- Route handler receives authenticated user\n\n**Expected Response:**\n- Status: 200 OK\n- User information (John Doe, user role)\n- Authentication timestamp\n\n**Check Server Console:**\n- Auth middleware logs\n- User authentication success message\n- Request completion log"
+          },
+          "response": []
+        },
+        {
+          "name": "✅ Protected Route - Valid Admin Token",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer admin-token-456",
+                "description": "Valid admin token"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/demo/protected",
+              "host": ["{{baseUrl}}"],
+              "path": ["demo", "protected"]
+            },
+            "description": "**Admin Authentication Test**\n\nThis request uses an admin token on a regular protected route:\n- Auth middleware validates admin token\n- Admin user context injected\n- Route works for admin users too\n\n**Expected Response:**\n- Status: 200 OK\n- Admin user information (Jane Admin, admin role)\n- Authentication timestamp\n\n**Learning:**\n- Higher privilege tokens work on lower privilege routes\n- Admin tokens contain admin role information"
+          },
+          "response": []
+        },
+        {
+          "name": "❌ Admin Route - User Token (Should Fail)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer user-token-123",
+                "description": "Valid user token (but not admin)"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/demo/admin",
+              "host": ["{{baseUrl}}"],
+              "path": ["demo", "admin"]
+            },
+            "description": "**Authorization Failure Test**\n\nThis request should fail with 403 status because:\n- User is authenticated (Auth middleware passes)\n- But user doesn't have admin role\n- Admin middleware blocks the request\n\n**Expected Response:**\n- Status: 403 Forbidden\n- Error about insufficient privileges\n- User role information showing they're not admin\n\n**Learning:**\n- Authentication ≠ Authorization\n- Middleware can check user roles/permissions\n- Multiple middleware can run in sequence"
+          },
+          "response": []
+        },
+        {
+          "name": "✅ Admin Route - Admin Token",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer admin-token-456",
+                "description": "Valid admin token"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/demo/admin",
+              "host": ["{{baseUrl}}"],
+              "path": ["demo", "admin"]
+            },
+            "description": "**Admin Authorization Success**\n\nThis request should succeed because:\n- User is authenticated (Auth middleware passes)\n- User has admin role (Admin middleware passes)\n- Both middleware inject context data\n- Route handler receives admin permissions\n\n**Expected Response:**\n- Status: 200 OK\n- Admin user information\n- Admin permissions array\n- System information (admin-only data)\n\n**Check Response:**\n- Admin permissions list\n- System stats (total users, active sessions)\n- Server time information"
+          },
+          "response": []
+        }
+      ],
+      "description": "Test authentication and authorization middleware patterns. Learn the difference between authentication (who you are) and authorization (what you can do)."
+    },
+    {
+      "name": "🚦 Rate Limiting & Throttling",
+      "item": [
+        {
+          "name": "🚦 Rate Limited Endpoint - Single Request",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/demo/rate-limited",
+              "host": ["{{baseUrl}}"],
+              "path": ["demo", "rate-limited"]
+            },
+            "description": "**Rate Limiting Test - Single Request**\n\nThis endpoint has strict rate limiting (10 requests/minute):\n- RateLimit middleware with 'strict' parameter\n- Tracks requests by IP address\n- Adds rate limit headers to response\n\n**Expected Response:**\n- Status: 200 OK (if under limit)\n- Rate limiting information\n\n**Check Response Headers:**\n- X-RateLimit-Limit: 10\n- X-RateLimit-Remaining: 9 (decreases)\n- X-RateLimit-Reset: timestamp\n\n**Try This:**\n- Send this request multiple times quickly\n- Watch the remaining count decrease\n- After 10 requests, you'll get 429 status"
+          },
+          "response": []
+        },
+        {
+          "name": "🚨 Rate Limited - Multiple Requests (Run Multiple Times)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-Test-Request",
+                "value": "{{$randomInt}}",
+                "description": "Random value to track individual requests"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/demo/rate-limited",
+              "host": ["{{baseUrl}}"],
+              "path": ["demo", "rate-limited"]
+            },
+            "description": "**Rate Limiting Test - Multiple Requests**\n\n🚨 **Instructions:**\n1. Send this request 12+ times quickly\n2. Watch the X-RateLimit-Remaining header decrease\n3. After 10 requests, you should get 429 status\n\n**What Happens:**\n- First 10 requests: 200 OK status\n- 11th+ requests: 429 Too Many Requests\n- Rate limit headers show remaining quota\n- Retry-After header shows when to retry\n\n**Expected 429 Response:**\n- Error about rate limit exceeded\n- Current request count\n- Reset time information\n- IP address that triggered the limit"
+          },
+          "response": []
+        },
+        {
+          "name": "🌊 API Route - Generous Rate Limit",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/data",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "data"]
+            },
+            "description": "**Generous Rate Limiting Demo**\n\nThis API endpoint has generous rate limiting:\n- 1000 requests per hour\n- Suitable for public APIs\n- Less restrictive than strict rate limiting\n\n**Check Response Headers:**\n- X-RateLimit-Limit: 1000\n- X-RateLimit-Remaining: 999 (high number)\n- X-RateLimit-Reset: hour timestamp\n\n**Also Notice:**\n- Response transformation (group middleware)\n- Enhanced response with meta data\n- API versioning in URL structure"
+          },
+          "response": []
+        }
+      ],
+      "description": "Test different rate limiting configurations and see how middleware prevents API abuse."
+    },
+    {
+      "name": "📱 Device Detection & Optimization",
+      "item": [
+        {
+          "name": "🖥️ Desktop Device Detection",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "User-Agent",
+                "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+                "description": "Desktop Chrome user agent"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/demo/device",
+              "host": ["{{baseUrl}}"],
+              "path": ["demo", "device"]
+            },
+            "description": "**Desktop Device Detection**\n\nThis tests device detection middleware with a desktop user agent:\n- DeviceDetector middleware parses User-Agent\n- Detects device type (desktop)\n- Identifies browser (Chrome) and OS (Windows)\n- Optimizes response for desktop\n\n**Check Response Headers:**\n- X-Device-Type: desktop\n- X-Browser: chrome\n- X-OS: windows\n\n**Check Response Body:**\n- Device detection details\n- Desktop-optimized content\n- Full-resolution images, complete JS\n- Device flags (isMobile: false)"
+          },
+          "response": []
+        },
+        {
+          "name": "📱 Mobile Device Detection",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "User-Agent",
+                "value": "Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.2 Mobile/15E148 Safari/604.1",
+                "description": "iPhone Safari user agent"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/demo/device",
+              "host": ["{{baseUrl}}"],
+              "path": ["demo", "device"]
+            },
+            "description": "**Mobile Device Detection**\n\nThis tests device detection middleware with a mobile user agent:\n- DeviceDetector middleware parses User-Agent\n- Detects device type (mobile)\n- Identifies browser (Safari) and OS (iOS)\n- Optimizes response for mobile\n\n**Check Response Headers:**\n- X-Device-Type: mobile\n- X-Browser: safari\n- X-OS: ios\n\n**Check Response Body:**\n- Mobile-optimized content\n- Compressed images, minimal JS\n- Mobile layout configuration\n- Device flags (isMobile: true)\n\n**Notice:**\n- Response includes mobile_optimized: true\n- Device info added to response\n- Different optimization strategy"
+          },
+          "response": []
+        },
+        {
+          "name": "📟 Tablet Device Detection",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "User-Agent",
+                "value": "Mozilla/5.0 (iPad; CPU OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.2 Mobile/15E148 Safari/604.1",
+                "description": "iPad Safari user agent"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/demo/device",
+              "host": ["{{baseUrl}}"],
+              "path": ["demo", "device"]
+            },
+            "description": "**Tablet Device Detection**\n\nThis tests device detection middleware with a tablet user agent:\n- DeviceDetector middleware parses User-Agent\n- Detects device type (tablet)\n- Identifies browser (Safari) and OS (iOS)\n- Optimizes response for tablet\n\n**Check Response Headers:**\n- X-Device-Type: tablet\n- X-Browser: safari\n- X-OS: ios\n\n**Check Response Body:**\n- Tablet-specific optimizations\n- Device flags (isTablet: true)\n- Hybrid mobile/desktop approach"
+          },
+          "response": []
+        },
+        {
+          "name": "🤖 Bot Detection",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "User-Agent",
+                "value": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+                "description": "Google bot user agent"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/demo/device",
+              "host": ["{{baseUrl}}"],
+              "path": ["demo", "device"]
+            },
+            "description": "**Bot Detection**\n\nThis tests device detection middleware with a bot user agent:\n- DeviceDetector middleware identifies bots\n- Sets isBot flag to true\n- Different handling for search engine crawlers\n\n**Check Response Body:**\n- isBot: true flag\n- Bot-specific optimizations\n- SEO-friendly response format"
+          },
+          "response": []
+        }
+      ],
+      "description": "Test device detection middleware with different User-Agent strings to see how responses are optimized for different devices."
+    },
+    {
+      "name": "🚩 Feature Flags & A/B Testing",
+      "item": [
+        {
+          "name": "✅ Beta Feature - 50% Rollout (Enabled)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/demo/beta",
+              "host": ["{{baseUrl}}"],
+              "path": ["demo", "beta"]
+            },
+            "description": "**Beta Feature Flag Test**\n\nThis endpoint uses feature flag middleware:\n- Feature: 'beta-features'\n- Rollout: 50% (based on IP hash)\n- Status: Enabled\n\n**What Happens:**\n- FeatureFlag middleware checks 'beta-features'\n- Calculates user rollout ID from IP + User-Agent\n- Determines if user is in 50% rollout\n- Either allows access or blocks with 403\n\n**If Successful (200 OK):**\n- Beta feature data\n- Feature flag information\n- Rollout percentage details\n\n**Check Response Headers:**\n- X-Feature-Flag: beta-features\n- X-Feature-Enabled: true\n- X-Feature-Rollout: 50\n\n**Try Multiple Times:**\n- Result may vary based on network/IP changes\n- ~50% chance of success for different users"
+          },
+          "response": []
+        },
+        {
+          "name": "❌ Experimental Feature - Disabled",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/demo/experimental",
+              "host": ["{{baseUrl}}"],
+              "path": ["demo", "experimental"]
+            },
+            "description": "**Disabled Feature Flag Test**\n\nThis endpoint uses a disabled feature flag:\n- Feature: 'experimental'\n- Rollout: 0% (disabled)\n- Status: Disabled\n\n**Expected Response:**\n- Status: 403 Forbidden\n- Error about feature being disabled\n- Feature configuration details\n\n**Learning:**\n- Feature flags can completely disable features\n- Useful for emergency shutoffs\n- Gradual feature rollouts\n- A/B testing scenarios"
+          },
+          "response": []
+        },
+        {
+          "name": "✅ New API Feature - 100% Rollout",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer user-token-123",
+                "description": "Required for this endpoint"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/demo/multiple",
+              "host": ["{{baseUrl}}"],
+              "path": ["demo", "multiple"]
+            },
+            "description": "**Full Rollout Feature Flag**\n\nThis endpoint uses multiple middleware including:\n- Auth middleware (authentication required)\n- DeviceDetector middleware\n- FeatureFlag middleware ('new-api' - 100% rollout)\n\n**Expected Response:**\n- Status: 200 OK\n- Combined data from all middleware\n- User information from Auth\n- Device information from DeviceDetector\n- Feature information from FeatureFlag\n\n**Check Response:**\n- middleware_data object with all context\n- combined_result with processed information\n- Feature flag always succeeds (100% rollout)"
+          },
+          "response": []
+        },
+        {
+          "name": "💎 Premium Feature - Auth Required",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer user-token-123",
+                "description": "Authentication required for premium features"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/premium/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["premium", "dashboard"]
+            },
+            "description": "**Premium Feature with Auth Requirement**\n\nThis endpoint demonstrates advanced feature flag usage:\n- Feature: 'premium-features'\n- Requires authentication (requiresAuth: true)\n- 100% rollout for authenticated users\n- Route group middleware applied\n\n**Middleware Chain:**\n1. Global middleware (logging, CORS, security)\n2. Auth middleware (from route)\n3. FeatureFlag middleware ('premium-features')\n4. ResponseTransformer middleware (from group)\n\n**Expected Response:**\n- Status: 200 OK\n- Enhanced response with metadata\n- Multiple middleware context data\n- Premium feature access confirmed"
+          },
+          "response": []
+        },
+        {
+          "name": "❌ Premium Feature - No Auth (Should Fail)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/premium/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["premium", "dashboard"]
+            },
+            "description": "**Premium Feature without Auth**\n\nThis should fail because:\n- Auth middleware blocks unauthenticated requests\n- FeatureFlag middleware never gets reached\n- Premium features require authentication\n\n**Expected Response:**\n- Status: 401 Unauthorized\n- Auth middleware error message\n- Hint about adding Authorization header\n\n**Learning:**\n- Middleware order matters\n- Early failures prevent later middleware execution\n- Auth requirements can be enforced at multiple levels"
+          },
+          "response": []
+        }
+      ],
+      "description": "Test feature flags and A/B testing capabilities. See how features can be enabled/disabled and rolled out gradually."
+    },
+    {
+      "name": "🎯 Multiple Middleware Chains",
+      "item": [
+        {
+          "name": "🔗 Multiple Middleware - Full Chain",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer admin-token-456",
+                "description": "Admin token for testing"
+              },
+              {
+                "key": "User-Agent",
+                "value": "Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15",
+                "description": "Mobile user agent"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/demo/multiple",
+              "host": ["{{baseUrl}}"],
+              "path": ["demo", "multiple"]
+            },
+            "description": "**Multiple Middleware Chain Test**\n\nThis endpoint demonstrates complex middleware chaining:\n1. **Global Middleware:** RequestLogger, CORS, SecurityHeaders\n2. **Named Middleware:** Auth → DeviceDetector → FeatureFlag\n\n**Execution Order:**\n1. RequestLogger (before) - logs incoming request\n2. CORS (before) - handles CORS if needed\n3. SecurityHeaders (pass-through)\n4. Auth (before) - validates admin token\n5. DeviceDetector (before) - parses mobile user agent\n6. FeatureFlag (before) - checks 'new-api' feature\n7. → Route handler executes\n8. FeatureFlag (after) - adds feature headers\n9. DeviceDetector (after) - mobile optimization\n10. Auth (after) - logs completion\n11. SecurityHeaders (after) - adds security headers\n12. CORS (after) - adds CORS headers\n13. RequestLogger (after) - logs response\n\n**Check Response:**\n- Combined data from all middleware\n- User context from Auth\n- Device context from DeviceDetector\n- Feature context from FeatureFlag\n\n**Check Server Console:**\n- See the complete middleware execution flow\n- Before/after processing logs\n- Timing and performance data"
+          },
+          "response": []
+        },
+        {
+          "name": "⛓️ Middleware Chain - Early Termination",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "User-Agent",
+                "value": "Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15",
+                "description": "Mobile user agent"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/demo/multiple",
+              "host": ["{{baseUrl}}"],
+              "path": ["demo", "multiple"]
+            },
+            "description": "**Early Termination Test**\n\nThis request should fail at the Auth middleware:\n- No Authorization header provided\n- Auth middleware terminates request early\n- DeviceDetector and FeatureFlag never execute\n- Route handler never executes\n\n**Execution Flow:**\n1. RequestLogger (before) ✅\n2. CORS (before) ✅\n3. SecurityHeaders (pass-through) ✅\n4. Auth (before) ❌ TERMINATES HERE\n5. ~~DeviceDetector~~ (never reached)\n6. ~~FeatureFlag~~ (never reached)\n7. ~~Route handler~~ (never reached)\n\n**Expected Response:**\n- Status: 401 Unauthorized\n- Auth middleware error message\n- No device or feature data\n\n**Learning:**\n- Middleware can stop request processing\n- Only global middleware 'after' methods run\n- Later middleware never execute after termination"
+          },
+          "response": []
+        }
+      ],
+      "description": "Test complex middleware chains and understand execution order and early termination."
+    },
+    {
+      "name": "📝 POST Requests & Data Creation",
+      "item": [
+        {
+          "name": "✅ Create Data - Authenticated POST",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer user-token-123",
+                "description": "User authentication token"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "description": "JSON content type"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Learning Middleware\",\n  \"content\": \"This post was created through middleware!\",\n  \"tags\": [\"middleware\", \"adonisjs\", \"learning\"],\n  \"priority\": \"high\",\n  \"metadata\": {\n    \"source\": \"postman\",\n    \"experiment\": \"middleware-learning\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/demo/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["demo", "create"]
+            },
+            "description": "**POST Request with Middleware**\n\nThis tests middleware on data creation:\n- **Auth middleware:** Validates user token\n- **RateLimit middleware:** Default rate limiting\n- **RequestLogger:** Logs POST body content\n- **Body parser:** Parses JSON payload\n\n**Expected Response:**\n- Status: 201 Created\n- Created data echoed back\n- Creator information (from auth)\n- Creation timestamp\n\n**Check Server Console:**\n- POST request body logged by RequestLogger\n- Auth middleware user validation\n- Rate limit tracking\n- JSON body parsing\n\n**Try This:**\n- Change the JSON data\n- Remove the auth header (should fail)\n- Send multiple requests quickly (rate limiting)"
+          },
+          "response": []
+        },
+        {
+          "name": "👑 Admin Create - Multiple Middleware",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer admin-token-456",
+                "description": "Admin authentication token"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Admin System Update\",\n  \"content\": \"This is an admin-only operation\",\n  \"system_level\": true,\n  \"permissions_required\": [\"admin\", \"system_modify\"],\n  \"critical\": true,\n  \"audit_log\": {\n    \"action\": \"system_update\",\n    \"performed_by\": \"admin\",\n    \"timestamp\": \"{{$isoTimestamp}}\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/demo/admin/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["demo", "admin", "create"]
+            },
+            "description": "**Admin POST with Multiple Middleware**\n\nThis endpoint demonstrates complex middleware chains on POST:\n- **Auth middleware:** Validates admin token\n- **Admin middleware:** Checks admin role\n- **ResponseTransformer:** Enriches response with metadata\n\n**Middleware Execution:**\n1. Global middleware (logging, parsing, security)\n2. Auth middleware validates token\n3. Admin middleware checks role permissions\n4. ResponseTransformer processes request/response\n5. Route handler creates admin data\n6. ResponseTransformer enriches response\n7. Global middleware completes\n\n**Expected Response:**\n- Status: 201 Created\n- Admin-created data with audit trail\n- Response transformation metadata\n- Request ID and processing time\n\n**Try With User Token:**\n- Change to Bearer user-token-123\n- Should fail at Admin middleware (403 Forbidden)"
+          },
+          "response": []
+        },
+        {
+          "name": "🚨 Invalid JSON - Error Handling",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer user-token-123"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Invalid JSON Test\",\n  \"content\": \"This JSON is malformed...\",\n  \"missing_comma_here\": true\n  \"this_will_cause_error\": \"invalid syntax\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/demo/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["demo", "create"]
+            },
+            "description": "**Invalid JSON Error Handling**\n\n🚨 **This request contains invalid JSON to test error handling**\n\nThe JSON has a syntax error (missing comma) that should be caught by:\n- Body parser middleware (built-in)\n- Or ResponseTransformer middleware validation\n\n**Expected Response:**\n- Status: 400 Bad Request\n- Error message about malformed JSON\n- Helpful error details\n\n**Learning:**\n- Middleware can validate request format\n- Early validation prevents route handler errors\n- Graceful error handling with meaningful messages"
+          },
+          "response": []
+        }
+      ],
+      "description": "Test middleware behavior with POST requests and data creation scenarios."
+    },
+    {
+      "name": "🔥 Error Handling & Edge Cases",
+      "item": [
+        {
+          "name": "💥 Intentional Error - Error Middleware",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/demo/error",
+              "host": ["{{baseUrl}}"],
+              "path": ["demo", "error"]
+            },
+            "description": "**Error Handling Middleware Test**\n\nThis endpoint intentionally throws an error to test:\n- ResponseTransformer error handling\n- Graceful error responses\n- Request ID tracking in errors\n- Performance timing even during errors\n\n**What Happens:**\n1. RequestLogger (before) - logs request\n2. ResponseTransformer (before) - starts timing\n3. Route handler throws error\n4. ResponseTransformer catches error\n5. Returns formatted error response with metadata\n\n**Expected Response:**\n- Status: 500 Internal Server Error\n- Error message and details\n- Request ID for tracking\n- Processing time\n- Timestamp information\n\n**Check Response Headers:**\n- X-Request-ID (for error tracking)\n- X-Processing-Time (timing even for errors)\n- X-Server information"
+          },
+          "response": []
+        },
+        {
+          "name": "🔒 Invalid Feature Flag",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/demo/unknown-feature",
+              "host": ["{{baseUrl}}"],
+              "path": ["demo", "unknown-feature"]
+            },
+            "description": "**Invalid Feature Flag Test**\n\n❌ **This endpoint doesn't exist to test 404 handling**\n\nBut you can modify a real endpoint to test invalid feature flags:\n1. Go to demo/beta\n2. The FeatureFlag middleware checks for 'beta-features'\n3. If you modify the route to use an invalid feature name, you'd get a 404 response\n\n**Expected Response:**\n- Status: 404 Not Found\n- Route not found message\n\n**Learning:**\n- Invalid routes are handled by AdonisJS routing\n- Middleware only runs for valid routes\n- 404 errors happen before middleware execution"
+          },
+          "response": []
+        }
+      ],
+      "description": "Test error handling scenarios and edge cases in middleware processing."
+    },
+    {
+      "name": "🔄 API Versioning & Groups",
+      "item": [
+        {
+          "name": "📊 API v1 - Data Endpoint",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/data",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "data"]
+            },
+            "description": "**API Group Middleware Demo**\n\nThis endpoint is part of the API route group:\n- **Group prefix:** /api/v1\n- **Group middleware:** ResponseTransformer (applies to all routes in group)\n- **Route middleware:** RateLimit with generous settings\n\n**Expected Response:**\n- Status: 200 OK\n- Enhanced response with metadata (from group middleware)\n- Rate limiting headers (generous: 1000/hour)\n- API versioning demonstration\n\n**Check Response:**\n- Meta object with request ID and timing\n- Version information\n- Processing time\n\n**Check Headers:**\n- X-RateLimit-Limit: 1000\n- X-Request-ID\n- X-Processing-Time"
+          },
+          "response": []
+        },
+        {
+          "name": "👥 API v1 - Users Endpoint (Auth Required)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer user-token-123",
+                "description": "Authentication required for user data"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "users"]
+            },
+            "description": "**API Users Endpoint with Multiple Middleware**\n\nThis endpoint combines:\n- **Group middleware:** ResponseTransformer\n- **Route middleware:** Auth + RateLimit (default)\n\n**Middleware Stack:**\n1. Global middleware (logging, CORS, security)\n2. Auth middleware (validates token)\n3. RateLimit middleware (default: 100 requests/15 min)\n4. ResponseTransformer (from group)\n5. Route handler\n6. All middleware 'after' processing\n\n**Expected Response:**\n- Status: 200 OK\n- User data (from protected endpoint)\n- Enhanced metadata (from ResponseTransformer)\n- Default rate limiting applied\n\n**Try Without Auth:**\n- Remove Authorization header\n- Should get 401 Unauthorized"
+          },
+          "response": []
+        },
+        {
+          "name": "⚙️ API v1 - Process Endpoint (Strict Rate Limit)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer user-token-123"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"operation\": \"data_processing\",\n  \"dataset\": \"user_analytics\",\n  \"parameters\": {\n    \"batch_size\": 1000,\n    \"parallel_processing\": true,\n    \"priority\": \"high\"\n  },\n  \"callback_url\": \"https://example.com/webhook\",\n  \"metadata\": {\n    \"initiated_by\": \"api_client\",\n    \"purpose\": \"middleware_testing\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/process",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "process"]
+            },
+            "description": "**Intensive Operation with Strict Rate Limiting**\n\nThis endpoint simulates intensive processing:\n- **Auth required:** Must be authenticated\n- **Strict rate limit:** Only 10 requests per minute\n- **Group middleware:** Response transformation\n- **POST operation:** Data processing simulation\n\n**Perfect for Testing:**\n1. Send this request multiple times quickly\n2. Watch rate limiting kick in after 10 requests\n3. See 429 status with retry information\n\n**Expected Responses:**\n- First 10 requests: 201 Created\n- 11+ requests: 429 Too Many Requests\n\n**Check Headers:**\n- X-RateLimit-Limit: 10\n- X-RateLimit-Remaining: (decreasing)\n- Retry-After: (when rate limited)\n\n**Use Case:**\n- Expensive operations need strict limiting\n- Prevents system overload\n- Fair usage enforcement"
+          },
+          "response": []
+        }
+      ],
+      "description": "Test API versioning, route groups, and how middleware applies to groups of routes."
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set base URL if not already set",
+          "if (!pm.variables.get('baseUrl')) {",
+          "    pm.variables.set('baseUrl', 'http://localhost:3333');",
+          "}",
+          "",
+          "// Add request timestamp for tracking",
+          "pm.variables.set('requestTimestamp', new Date().toISOString());",
+          "",
+          "console.log('🚀 Request starting at:', pm.variables.get('requestTimestamp'));",
+          "console.log('📡 Target URL:', pm.request.url.toString());"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Log response details for learning",
+          "console.log('📊 Response Status:', pm.response.code, pm.response.status);",
+          "console.log('⏱️  Response Time:', pm.response.responseTime + 'ms');",
+          "",
+          "// Log important middleware headers",
+          "const headers = pm.response.headers;",
+          "const middlewareHeaders = [",
+          "    'x-request-id',",
+          "    'x-processing-time', ",
+          "    'x-device-type',",
+          "    'x-browser',",
+          "    'x-os',",
+          "    'x-feature-flag',",
+          "    'x-ratelimit-limit',",
+          "    'x-ratelimit-remaining',",
+          "    'x-frame-options',",
+          "    'access-control-allow-origin'",
+          "];",
+          "",
+          "console.log('🏷️  Middleware Headers:');",
+          "middlewareHeaders.forEach(headerName => {",
+          "    const headerValue = headers.get(headerName);",
+          "    if (headerValue) {",
+          "        console.log(`   ${headerName}: ${headerValue}`);",
+          "    }",
+          "});",
+          "",
+          "// Parse and log response body highlights",
+          "if (pm.response.headers.get('content-type')?.includes('application/json')) {",
+          "    try {",
+          "        const jsonResponse = pm.response.json();",
+          "        ",
+          "        // Log user info if present",
+          "        if (jsonResponse.user) {",
+          "            console.log('👤 User Info:', jsonResponse.user.name, '(' + jsonResponse.user.role + ')');",
+          "        }",
+          "        ",
+          "        // Log device info if present",
+          "        if (jsonResponse.device_detection) {",
+          "            const device = jsonResponse.device_detection;",
+          "            console.log('📱 Device:', device.type, '-', device.browser, 'on', device.os);",
+          "        }",
+          "        ",
+          "        // Log feature flag info if present",
+          "        if (jsonResponse.feature_info) {",
+          "            console.log('🚩 Feature:', jsonResponse.feature_info.name, '- Enabled:', jsonResponse.feature_info.enabled);",
+          "        }",
+          "        ",
+          "        // Log rate limit info if present",
+          "        if (jsonResponse.current) {",
+          "            console.log('🚦 Rate Limit:', jsonResponse.current.count + '/' + jsonResponse.limit?.requests);",
+          "        }",
+          "        ",
+          "        // Log error info if present",
+          "        if (jsonResponse.error) {",
+          "            console.log('❌ Error:', jsonResponse.error, '-', jsonResponse.message);",
+          "        }",
+          "        ",
+          "    } catch (e) {",
+          "        console.log('📄 Response body is not valid JSON');",
+          "    }",
+          "}",
+          "",
+          "console.log('=' .repeat(50));"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3333",
+      "type": "string",
+      "description": "Base URL for the AdonisJS middleware lab server"
+    }
+  ]
+}
