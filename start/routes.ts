@@ -180,3 +180,127 @@ Route.group(() => {
 .prefix('/api/v1')
 .middleware(['transform']) // Apply to all routes in group
 .as('api')
+
+/*
+|--------------------------------------------------------------------------
+| 🍪 Cookie & Session Learning Routes
+|--------------------------------------------------------------------------
+|
+| These routes demonstrate comprehensive cookie and session management:
+| - Cookie operations (setting, reading, clearing)
+| - Session management (initialization, data storage, cleanup)
+| - Practical examples (shopping cart, user preferences, authentication)
+| - Security best practices and comparisons
+|
+*/
+
+// 🏠 COOKIE & SESSION OVERVIEW
+Route.get('/demo/cookies-sessions', 'CookieSessionController.index')
+  .as('cookieSession.overview')
+
+/*
+|--------------------------------------------------------------------------
+| 🍪 Cookie Management Routes
+|--------------------------------------------------------------------------
+*/
+
+Route.group(() => {
+  // Basic cookie operations
+  Route.get('/set-basic', 'CookieSessionController.cookiesDemo')
+    .middleware('cookies')
+    .as('basic')
+  
+  Route.get('/set-secure', 'CookieSessionController.cookiesDemo')
+    .middleware('cookies')
+    .as('secure')
+  
+  Route.get('/set-tracking', 'CookieSessionController.cookiesDemo')
+    .middleware('cookies')
+    .as('tracking')
+  
+  Route.get('/shopping-cart', 'CookieSessionController.cookiesDemo')
+    .middleware('cookies')
+    .as('shoppingCart')
+  
+  Route.get('/clear', 'CookieSessionController.cookiesDemo')
+    .middleware('cookies')
+    .as('clear')
+  
+  Route.get('/clear-auth', 'CookieSessionController.cookiesDemo')
+    .middleware('cookies')
+    .as('clearAuth')
+  
+  Route.get('/read', 'CookieSessionController.cookiesDemo')
+    .middleware('cookies')
+    .as('read')
+})
+.prefix('/demo/cookies')
+.as('cookies')
+
+/*
+|--------------------------------------------------------------------------
+| 💾 Session Management Routes
+|--------------------------------------------------------------------------
+*/
+
+Route.group(() => {
+  // Session operations
+  Route.get('/init', 'CookieSessionController.sessionsDemo')
+    .middleware('sessions')
+    .as('init')
+  
+  Route.get('/shopping-cart', 'CookieSessionController.sessionsDemo')
+    .middleware('sessions')
+    .as('shoppingCart')
+  
+  Route.get('/flash', 'CookieSessionController.sessionsDemo')
+    .middleware('sessions')
+    .as('flash')
+  
+  Route.get('/update-preferences', 'CookieSessionController.sessionsDemo')
+    .middleware('sessions')
+    .as('updatePreferences')
+  
+  Route.get('/regenerate', 'CookieSessionController.sessionsDemo')
+    .middleware('sessions')
+    .as('regenerate')
+  
+  Route.get('/clear-cart', 'CookieSessionController.sessionsDemo')
+    .middleware('sessions')
+    .as('clearCart')
+  
+  Route.get('/logout', 'CookieSessionController.sessionsDemo')
+    .middleware('sessions')
+    .as('logout')
+  
+  Route.get('/destroy', 'CookieSessionController.sessionsDemo')
+    .middleware('sessions')
+    .as('destroy')
+  
+  Route.get('/read', 'CookieSessionController.sessionsDemo')
+    .middleware('sessions')
+    .as('read')
+})
+.prefix('/demo/sessions')
+.as('sessions')
+
+/*
+|--------------------------------------------------------------------------
+| ⚖️ Comparison & Educational Routes
+|--------------------------------------------------------------------------
+*/
+
+// Cookie vs Session comparison
+Route.get('/demo/cookies-vs-sessions', 'CookieSessionController.compareApproaches')
+  .middleware(['cookies', 'sessions'])
+  .as('cookieSession.compare')
+
+// Shopping cart comparison (both approaches)
+Route.get('/demo/shopping-cart-comparison', 'CookieSessionController.shoppingCartDemo')
+  .middleware(['cookies', 'sessions'])
+  .as('cookieSession.shoppingCartDemo')
+
+// Flash messages demonstration
+Route.get('/demo/flash-messages', 'CookieSessionController.flashMessagesDemo')
+  .middleware('sessions')
+  .as('cookieSession.flashMessages')

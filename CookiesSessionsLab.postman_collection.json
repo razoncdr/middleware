@@ -1,0 +1,512 @@
+{
+	"info": {
+		"_postman_id": "cookies-sessions-lab-2024",
+		"name": "🍪💾 Cookies & Sessions Learning Lab",
+		"description": "Complete collection for learning cookies and sessions in AdonisJS.\n\n## 📚 Learning Objectives\n- Understand cookie vs session storage\n- Learn security best practices\n- See practical implementations (shopping cart, auth, preferences)\n- Experience flash messages and session lifecycle\n\n## 🚀 Getting Started\n1. Start your AdonisJS server: `npm run dev`\n2. Import this collection into Postman\n3. Update the `{{baseUrl}}` variable if needed\n4. Start with the Overview request\n5. Follow the suggested order in folders\n\n## 🔍 What to Watch\n- **Cookies tab** in Postman responses\n- **Headers** showing Set-Cookie\n- **Response bodies** with educational content\n- **Network behavior** differences between cookies/sessions\n\n## 📖 Additional Resources\n- Read: COOKIES_SESSIONS_GUIDE.md\n- Browser Dev Tools: F12 → Application → Cookies\n- Test Script: ./test-cookies-sessions.sh",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "🏠 Overview & Documentation",
+			"item": [
+				{
+					"name": "📋 Learning Overview",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/demo/cookies-sessions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"demo",
+								"cookies-sessions"
+							]
+						},
+						"description": "**Start Here!** 🎯\n\nThis endpoint provides a complete overview of:\n- All available endpoints\n- Learning objectives for cookies and sessions\n- Security tips and best practices\n- Quick reference guide\n\n### What You'll Learn:\n- Difference between client-side (cookies) and server-side (sessions) storage\n- Security options and when to use them\n- Practical applications in web development\n\n### Next Steps:\n1. Read the response carefully\n2. Note all the available endpoints\n3. Start with Cookie Management folder\n4. Then move to Session Management\n5. End with Comparison & Educational requests"
+					},
+					"response": []
+				}
+			],
+			"description": "Start your learning journey here! These requests provide comprehensive overviews and documentation for the entire cookies and sessions learning lab."
+		},
+		{
+			"name": "🍪 Cookie Management",
+			"item": [
+				{
+					"name": "🌟 Set Basic Cookie (User Preference)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/demo/cookies/set-basic",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"demo",
+								"cookies",
+								"set-basic"
+							]
+						},
+						"description": "**Basic Cookie Example** 🍪\n\nSets a basic user preference cookie with:\n- **Name**: `user_preference`\n- **Value**: `dark_mode`\n- **Max Age**: 7 days\n- **HttpOnly**: false (JavaScript accessible)\n- **Path**: `/`\n\n### What This Demonstrates:\n- Simple cookie creation\n- User preference storage\n- Client-side accessible data\n\n### Check After Request:\n1. **Postman Cookies Tab**: See the new cookie\n2. **Headers**: Look for `Set-Cookie` header\n3. **Browser Dev Tools**: Application → Cookies\n\n### Real-World Use Cases:\n- Theme preferences (dark/light mode)\n- Language settings\n- UI preferences (sidebar collapsed/expanded)"
+					},
+					"response": []
+				},
+				{
+					"name": "🔐 Set Secure Cookie (Authentication)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/demo/cookies/set-secure",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"demo",
+								"cookies",
+								"set-secure"
+							]
+						},
+						"description": "**Secure Cookie Example** 🔒\n\nSets a secure authentication cookie with:\n- **Name**: `auth_token`\n- **Value**: `secure_token_12345`\n- **HttpOnly**: true (XSS protection)\n- **Secure**: true (HTTPS only)\n- **SameSite**: strict (CSRF protection)\n- **Max Age**: 1 hour\n- **Signed**: true (integrity verification)\n\n### Security Features:\n- **HttpOnly**: Prevents JavaScript access (XSS protection)\n- **Secure**: Only transmitted over HTTPS\n- **SameSite**: Prevents cross-site request attacks\n- **Signed**: Ensures cookie integrity\n\n### Real-World Use Cases:\n- Authentication tokens\n- CSRF tokens\n- Session identifiers\n- Sensitive user data"
+					},
+					"response": []
+				},
+				{
+					"name": "📊 Set Tracking Cookies (Analytics)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/demo/cookies/set-tracking",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"demo",
+								"cookies",
+								"set-tracking"
+							]
+						},
+						"description": "**Tracking Cookies Example** 📈\n\nSets analytics and tracking cookies:\n- **visit_count**: Incremental counter\n- **last_visit**: Timestamp of visit\n- **Max Age**: 30 days\n- **HttpOnly**: false (allows JavaScript access)\n\n### What This Demonstrates:\n- Visit counting and tracking\n- Timestamp storage\n- Long-term data persistence\n- Analytics implementation\n\n### Run Multiple Times:\nTry calling this endpoint several times to see the visit counter increment!\n\n### Real-World Use Cases:\n- User analytics\n- Visit tracking\n- Behavior analysis\n- A/B testing data"
+					},
+					"response": []
+				},
+				{
+					"name": "🛒 Cookie-Based Shopping Cart",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/demo/cookies/shopping-cart",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"demo",
+								"cookies",
+								"shopping-cart"
+							]
+						},
+						"description": "**Shopping Cart Cookie** 🛒\n\nImplements shopping cart using cookies:\n- Stores cart data as JSON in cookie\n- Adds random products on each call\n- **Max Age**: 7 days\n- **Size Limit**: ~4KB total\n\n### What This Demonstrates:\n- JSON data storage in cookies\n- Persistent shopping cart\n- Cookie size limitations\n- Client-side data management\n\n### Try This:\n1. Call this endpoint multiple times\n2. See cart items accumulate\n3. Check cookie size in dev tools\n4. Compare with session-based cart later\n\n### Pros & Cons:\n✅ **Pros**: Persists across sessions, no server storage  \n❌ **Cons**: Size limited, sent with every request"
+					},
+					"response": []
+				},
+				{
+					"name": "📖 Read All Cookies",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/demo/cookies/read",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"demo",
+								"cookies",
+								"read"
+							]
+						},
+						"description": "**Cookie Reading Demo** 📖\n\nReads and displays all current cookies:\n- Shows all cookie names and values\n- Displays cookie sizes and statistics\n- Educational information about cookies\n- Security considerations\n\n### Best Time to Use:\nAfter setting some cookies with the previous endpoints!\n\n### What You'll See:\n- Complete cookie inventory\n- Size analysis\n- Security information\n- Browser compatibility notes\n\n### Learning Points:\n- How cookies are transmitted\n- Size impact on requests\n- Security implications"
+					},
+					"response": []
+				},
+				{
+					"name": "🧹 Clear Non-Auth Cookies",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/demo/cookies/clear",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"demo",
+								"cookies",
+								"clear"
+							]
+						},
+						"description": "**Cookie Cleanup** 🧹\n\nClears non-authentication cookies:\n- `user_preference`\n- `visit_count`\n- `last_visit`\n- `shopping_cart`\n\n### What This Demonstrates:\n- Selective cookie deletion\n- Cookie lifecycle management\n- Preserving important cookies (auth tokens)\n\n### Security Note:\nNotice that authentication cookies are NOT cleared - this is a security best practice for partial cleanup operations."
+					},
+					"response": []
+				},
+				{
+					"name": "🚪 Clear Authentication Cookies",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/demo/cookies/clear-auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"demo",
+								"cookies",
+								"clear-auth"
+							]
+						},
+						"description": "**Authentication Logout** 🚪\n\nClears authentication-related cookies:\n- `auth_token`\n- Other sensitive authentication data\n\n### What This Demonstrates:\n- Secure logout process\n- Authentication cookie cleanup\n- Security best practices\n\n### Use Case:\nThis simulates what happens when a user logs out - only authentication cookies are cleared while user preferences might remain."
+					},
+					"response": []
+				}
+			],
+			"description": "Learn about cookies - client-side storage that's sent with every HTTP request. Explore security options, size limitations, and practical use cases.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// This folder demonstrates cookie management",
+							"console.log('🍪 Testing Cookie Management');"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "💾 Session Management",
+			"item": [
+				{
+					"name": "🎬 Initialize User Session",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/demo/sessions/init",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"demo",
+								"sessions",
+								"init"
+							]
+						},
+						"description": "**Session Initialization** 🎬\n\nCreates a new user session with:\n- **User data**: ID, name, email, role\n- **Preferences**: theme, language, notifications\n- **Visit tracking**: count and timestamp\n- **Login time**: authentication timestamp\n\n### What This Demonstrates:\n- Server-side data storage\n- Complex object storage\n- Session initialization\n- User authentication state\n\n### What Happens:\n1. Session ID is generated (stored in cookie)\n2. User data is stored server-side\n3. Visit counter is initialized\n4. Login timestamp is recorded\n\n### Security Benefits:\n- Data not visible to client\n- No size limitations\n- Cannot be tampered with\n- Server-controlled lifecycle"
+					},
+					"response": []
+				},
+				{
+					"name": "🛒 Session-Based Shopping Cart",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/demo/sessions/shopping-cart",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"demo",
+								"sessions",
+								"shopping-cart"
+							]
+						},
+						"description": "**Session Shopping Cart** 🛒\n\nImplements shopping cart using sessions:\n- Stores complex cart data server-side\n- Adds detailed product information\n- Sets flash message for user feedback\n- No size limitations\n\n### What This Demonstrates:\n- Server-side data storage\n- Complex object handling\n- Flash message integration\n- Unlimited data capacity\n\n### Compare With Cookie Cart:\nTry this after using the cookie-based cart to see the differences in:\n- Data complexity\n- Storage capacity\n- Security\n- Performance\n\n### Run Multiple Times:\nCall this several times to build up a substantial cart, then compare with the cookie version!"
+					},
+					"response": []
+				},
+				{
+					"name": "⚡ Flash Messages Demo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/demo/sessions/flash",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"demo",
+								"sessions",
+								"flash"
+							]
+						},
+						"description": "**Flash Messages Setup** ⚡\n\nSets various types of flash messages:\n- **Success**: Operation completed\n- **Info**: Informational message  \n- **Warning**: Warning message\n- **Error**: Error message\n\n### What This Demonstrates:\n- Temporary message storage\n- User feedback system\n- One-time data persistence\n- Message categorization\n\n### Important:\nFlash messages are **consumed on first read**! After setting them here, immediately call the \"Read Flash Messages\" endpoint to see them before they disappear.\n\n### Real-World Use Cases:\n- Form submission feedback\n- Error notifications\n- Success confirmations\n- User guidance messages"
+					},
+					"response": []
+				},
+				{
+					"name": "⚙️ Update User Preferences",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/demo/sessions/update-preferences",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"demo",
+								"sessions",
+								"update-preferences"
+							]
+						},
+						"description": "**User Preferences Update** ⚙️\n\nUpdates user preferences in session:\n- Toggles theme (dark ↔ light)\n- Updates timestamp\n- Sets success flash message\n- Requires existing user session\n\n### What This Demonstrates:\n- Session data modification\n- User preference management\n- Data persistence\n- Flash message feedback\n\n### Prerequisites:\nRun \"Initialize User Session\" first!\n\n### Try This:\n1. Initialize session first\n2. Call this endpoint multiple times\n3. Watch theme toggle between dark/light\n4. Note the success flash messages"
+					},
+					"response": []
+				},
+				{
+					"name": "🔄 Regenerate Session ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/demo/sessions/regenerate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"demo",
+								"sessions",
+								"regenerate"
+							]
+						},
+						"description": "**Session ID Regeneration** 🔄\n\nRegenerates the session ID for security:\n- Creates new session ID\n- Preserves all session data\n- Sets informational flash message\n- Security best practice\n\n### What This Demonstrates:\n- Session security enhancement\n- ID regeneration without data loss\n- Security best practices\n- Post-authentication procedures\n\n### When to Use:\n- After user login\n- After privilege escalation\n- Periodically for security\n- After sensitive operations\n\n### Security Benefit:\nPrevents session fixation attacks by ensuring the session ID changes after authentication."
+					},
+					"response": []
+				},
+				{
+					"name": "🧹 Clear Session Cart",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/demo/sessions/clear-cart",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"demo",
+								"sessions",
+								"clear-cart"
+							]
+						},
+						"description": "**Session Cart Cleanup** 🧹\n\nClears shopping cart from session:\n- Removes cart data\n- Removes cart timestamp\n- Sets success flash message\n- Preserves other session data\n\n### What This Demonstrates:\n- Selective session data removal\n- Partial session cleanup\n- User feedback via flash messages\n- Data lifecycle management\n\n### Use Case:\nSimulates user clearing their cart or completing a purchase while keeping their login session active."
+					},
+					"response": []
+				},
+				{
+					"name": "🚪 User Logout (Clear User Data)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/demo/sessions/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"demo",
+								"sessions",
+								"logout"
+							]
+						},
+						"description": "**User Logout** 🚪\n\nSimulates user logout by clearing:\n- User authentication data\n- Visit tracking data\n- Shopping cart data\n- All user-specific information\n- Sets logout flash message\n\n### What This Demonstrates:\n- Comprehensive logout process\n- Security data cleanup\n- Proper session management\n- User feedback\n\n### Security Practice:\nThis shows how to properly clear sensitive data on logout while maintaining the session for flash messages."
+					},
+					"response": []
+				},
+				{
+					"name": "💥 Destroy Entire Session",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/demo/sessions/destroy",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"demo",
+								"sessions",
+								"destroy"
+							]
+						},
+						"description": "**Complete Session Destruction** 💥\n\nCompletely destroys the session:\n- Removes ALL session data\n- Destroys session ID\n- Creates entirely new session\n- Nuclear option for cleanup\n\n### What This Demonstrates:\n- Complete session lifecycle\n- Total data cleanup\n- Security reset\n- Fresh start capability\n\n### When to Use:\n- Security breaches\n- Complete user logout\n- Session corruption\n- Administrative cleanup\n\n### Note:\nAfter this, you'll need to initialize a new session to continue testing!"
+					},
+					"response": []
+				},
+				{
+					"name": "📖 Read Session Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/demo/sessions/read",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"demo",
+								"sessions",
+								"read"
+							]
+						},
+						"description": "**Session Data Reading** 📖\n\nReads and displays current session:\n- Session ID and metadata\n- User authentication state\n- Cart information\n- Visit statistics\n- Flash messages (consumed after reading!)\n\n### What This Demonstrates:\n- Session data inspection\n- Current session state\n- Data organization\n- Flash message consumption\n\n### Best Used After:\n- Initializing session\n- Setting flash messages\n- Modifying session data\n- Before session cleanup"
+					},
+					"response": []
+				}
+			],
+			"description": "Learn about sessions - server-side storage identified by session IDs. Explore flash messages, data security, and session lifecycle management.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// This folder demonstrates session management",
+							"console.log('💾 Testing Session Management');"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		},
+		{
+			"name": "⚖️ Comparison & Educational",
+			"item": [
+				{
+					"name": "🔍 Cookie vs Session Comparison",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/demo/cookies-vs-sessions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"demo",
+								"cookies-vs-sessions"
+							]
+						},
+						"description": "**Comprehensive Comparison** 🔍\n\nProvides detailed comparison between cookies and sessions:\n- **Storage location** differences\n- **Data transmission** patterns\n- **Size limitations** comparison\n- **Security** implications\n- **Performance** considerations\n- **Current data** from both approaches\n\n### What This Demonstrates:\n- Side-by-side comparison\n- Real-world trade-offs\n- When to use each approach\n- Current state analysis\n\n### Best Used After:\n- Setting up both cookies and sessions\n- Adding items to both cookie and session carts\n- Understanding both approaches\n\n### Educational Value:\nThis endpoint provides the \"why\" behind choosing cookies vs sessions for different use cases."
+					},
+					"response": []
+				},
+				{
+					"name": "🛒 Shopping Cart Comparison",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/demo/shopping-cart-comparison",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"demo",
+								"shopping-cart-comparison"
+							]
+						},
+						"description": "**Shopping Cart Deep Dive** 🛒\n\nDetailed comparison of cookie vs session shopping carts:\n- **Current cart contents** from both approaches\n- **Storage method** analysis\n- **Pros and cons** of each approach\n- **Recommendations** for different scenarios\n- **Architecture patterns** for enterprise\n\n### What This Demonstrates:\n- Practical implementation comparison\n- Real-world decision factors\n- Scalability considerations\n- Hybrid approaches\n\n### Prerequisites:\nFor best results, add items to both:\n1. Cookie cart: `/demo/cookies/shopping-cart`\n2. Session cart: `/demo/sessions/shopping-cart`\n\n### Learning Focus:\nUnderstand when to choose cookies vs sessions for e-commerce applications."
+					},
+					"response": []
+				},
+				{
+					"name": "⚡ Flash Messages Reader",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/demo/flash-messages",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"demo",
+								"flash-messages"
+							]
+						},
+						"description": "**Flash Messages Consumer** ⚡\n\nReads and consumes flash messages:\n- Displays all current flash messages\n- **Automatically clears** messages after reading\n- Explains flash message lifecycle\n- Shows common use cases\n\n### What This Demonstrates:\n- Flash message consumption\n- One-time data concept\n- User feedback patterns\n- Message lifecycle\n\n### Important Timing:\n1. First call `/demo/sessions/flash` to set messages\n2. Then immediately call this endpoint\n3. Call this endpoint again - messages will be gone!\n\n### Real-World Pattern:\nThis simulates how flash messages work in web applications - perfect for form submission feedback."
+					},
+					"response": []
+				}
+			],
+			"description": "Educational endpoints that compare different approaches and demonstrate advanced concepts like flash messages and architectural decisions.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// This folder provides educational comparisons",
+							"console.log('⚖️ Testing Educational Comparisons');"
+						],
+						"type": "text/javascript"
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"exec": [
+					"// Global setup for all requests",
+					"console.log('🍪💾 Starting Cookies & Sessions Test');"
+				],
+				"type": "text/javascript"
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"exec": [
+					"// Global test script for all requests",
+					"pm.test('Response time is acceptable', function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+					"});",
+					"",
+					"pm.test('Response has JSON body', function () {",
+					"    pm.response.to.have.jsonBody();",
+					"});",
+					"",
+					"pm.test('Response contains educational content', function () {",
+					"    const response = pm.response.json();",
+					"    pm.expect(response).to.have.property('message');",
+					"});",
+					"",
+					"// Log interesting headers",
+					"const setCookieHeader = pm.response.headers.get('Set-Cookie');",
+					"if (setCookieHeader) {",
+					"    console.log('🍪 Set-Cookie header found:', setCookieHeader);",
+					"}"
+				],
+				"type": "text/javascript"
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://127.0.0.1:3333",
+			"description": "Base URL for the AdonisJS server. Update port if different."
+		}
+	]
+}

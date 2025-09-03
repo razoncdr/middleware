@@ -71,4 +71,8 @@ Server.middleware.registerNamed({
   
   // 🚩 Feature Management
   feature: () => import('App/Middleware/FeatureFlag'),
+  
+  // 🍪 Cookie & Session Management
+  cookies: () => import('App/Middleware/CookieManager'),
+  sessions: () => import('App/Middleware/SessionManager'),
 })
